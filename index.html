@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUDO NETWORK | MINECRAFT SERVER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #60efff;
+            --bg: #0b1014;
+            --glass: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Lexend', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background-image: radial-gradient(circle at top right, #1a2a24 0%, #0b1014 60%);
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Thẻ Header & IP */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 18px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0b1014;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .status-badge {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .ip-box {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ip-box:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .ip-text { font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: bold; color: var(--secondary); }
+
+        /* Phần Nội Quy */
+        .rules-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 25px;
+        }
+
+        .rules-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .rule-number {
+            background: var(--primary);
+            color: black;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+
+        /* Nút thông báo Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--primary);
+            color: #000;
+            text-align: center;
+            border-radius: 10px;
+            padding: 12px;
+            position: fixed;
+            z-index: 99;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="card">
+            <div class="logo">S</div>
+            <h1>SUDO NETWORK</h1>
+            <div class="status-badge">
+                ● <span id="online-count">Đang tải...</span> người chơi online
+            </div>
+            
+            <div class="ip-box" onclick="copyIP()">
+                <div class="ip-text" id="server-ip">us1.pterocore.space:25519</div>
+                <small style="color: #888;">Click để copy địa chỉ IP</small>
+            </div>
+        </div>
+
+        <div class="rules-card">
+            <h2>📜 NỘI QUY SERVER</h2>
+            
+            <div class="rule-item">
+                <div class="rule-number">1</div>
+                <div><b>Tôn trọng người chơi:</b> Không chửi thề, xúc phạm hoặc phân biệt đối xử với thành viên khác.</div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">2</div>
+                <div><b>Không gian lận:</b> Nghiêm cấm sử dụng Hack, Cheat, X-ray hoặc tận dụng lỗi game để trục lợi.</div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">3</div>
+                <div><b>Chống phá Server:</b> Không phá hoại công trình (Grief) của người khác hoặc làm lag server.</div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">4</div>
+                <div><b>Quảng cáo:</b> Không quảng bá các server khác hoặc gửi link rác vào chat box.</div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">5</div>
+                <div><b>Bảo mật:</b> Tự bảo quản tài khoản cá nhân, không cung cấp mật khẩu cho người lạ.</div>
+            </div>
+            
+            <p style="font-size: 0.8rem; color: #888; text-align: center; margin-top: 20px;">
+                * Vi phạm sẽ bị xử phạt tùy mức độ (Kick, Mute hoặc Ban vĩnh viễn)
+            </p>
+        </div>
+    </div>
+
+    <div id="toast">✅ Đã copy IP thành công!</div>
+
+    <script>
+        const ip = "us1.pterocore.space";
+        const port = "25519";
+
+        // Hàm cập nhật số người chơi online thực tế
+        function fetchServerStatus() {
+            $.getJSON(`https://api.mcstatus.io/v2/status/java/${ip}:${port}`, function(data) {
+                if (data.online) {
+                    $('#online-count').text(data.players.online);
+                } else {
+                    $('#online-count').text("0");
+                }
+            }).fail(function() {
+                $('#online-count').text("Offline");
+            });
+        }
+
+        // Hàm sao chép IP
+        function copyIP() {
+            const copyText = document.getElementById("server-ip").innerText;
+            navigator.clipboard.writeText(copyText);
+            
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // Chạy lần đầu và lặp lại sau mỗi 30 giây
+        fetchServerStatus();
+        setInterval(fetchServerStatus, 30000);
+    </script>
+</body>
+</html>
